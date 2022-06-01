@@ -1,13 +1,17 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import gsap from "gsap";
+import GUI from 'lil-gui';
 
 import bufferVertexShader from "../public/config/vertex.glsl";
 import bufferFragmentShader from "../public/config/fragment.glsl";
 
 export default function Particles() {
   const ref = useRef();
+  const router = useRouter();
+
   useEffect(() => {
     document.getElementsByTagName("body")[0].classList.add("bg-gray-800");
   }, []);
@@ -41,20 +45,6 @@ export default function Particles() {
       // Update camera
       camera.aspect = sizes.width / sizes.height;
       camera.updateProjectionMatrix();
-      if (window.innerWidth >= 768) {
-        camera.position.y = 0.3;
-        camera.position.z = 2.5;
-      }
-      if (window.innerWidth >= 1024) {
-        camera.position.x = 0;
-        camera.position.y = 0.3;
-        camera.position.z = 2;
-      }
-      if (window.innerWidth >= 1280) {
-        camera.position.x = -1;
-        camera.position.y = 0;
-        camera.position.z = 2;
-      }
 
       // Update renderer
       renderer.setSize(sizes.width, sizes.height);
@@ -115,7 +105,7 @@ export default function Particles() {
     geometry.setAttribute("position4", geometry4Attribute);
     geometry.setAttribute("position5", geometry5Attribute);
 
-    const gltfLoader = new GLTFLoader();
+    /* const gltfLoader = new GLTFLoader();
 
     gltfLoader.load("/three/models/king.glb", (gltf) => {
       const geometry3Attribute = new THREE.BufferAttribute(
@@ -139,7 +129,7 @@ export default function Particles() {
         3
       );
       geometry.setAttribute("position5", geometry5Attribute);
-    });
+    }); */
 
     //Custom shaders
     const bufferMaterial = new THREE.ShaderMaterial({
@@ -190,23 +180,7 @@ export default function Particles() {
       100
     );
 
-    camera.position.y = 0.3;
-    camera.position.z = 3;
-
-    if (window.innerWidth >= 768) {
-      camera.position.y = 0.3;
-      camera.position.z = 2.5;
-    }
-    if (window.innerWidth >= 1024) {
-      camera.position.x = 0;
-      camera.position.y = 0.3;
-      camera.position.z = 2;
-    }
-    if (window.innerWidth >= 1280) {
-      camera.position.x = -1;
-      camera.position.y = 0;
-      camera.position.z = 2;
-    }
+    camera.position.z = 2;
 
     scene.add(camera);
 
@@ -220,10 +194,58 @@ export default function Particles() {
     renderer.render(scene, camera);
     renderer.setPixelRatio(window.devicePixelRatio);
 
+    //GUI
+    const gui = new GUI();
+    const guiGeneral = gui.addFolder('General');
+    const guiStates = gui.addFolder('States');
+    
+    router.beforePopState(({ }) => {
+      gui.destroy(); //Destroys gui before route change
+      return true;
+    });
+
+    guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
+      bufferMaterial.uniforms.bufferColor.value.set(parameters.bufferColor);
+    });
+
+    guiStates
+    .add(parameters, "transparencyState")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("Alpha");
+
+    guiStates
+    .add(parameters, "randomState")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("Random state");
+
+    guiStates
+    .add(parameters, "state1")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("State 1");
+
+    guiStates
+    .add(parameters, "state2")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("State 1")
+
+    guiStates
+    .add(parameters, "state3")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("State 2")
+
+
     // Animate
     const clock = new THREE.Clock();
-
-    //Cycle between geometries
 
     const tick = () => {
       const elapsedTime = clock.getElapsedTime();
@@ -262,78 +284,14 @@ export default function Particles() {
       duration: 3.0,
       ease: "circ.out",
     });
+    gsap.to(parameters, {
+      state1: 1.0,
+      state2: 1.0,
+      state3: 1.0,
+      duration: 1.25,
+      ease: "circ.out",
+    });
   }, [parameters]);
-
-/*   useEffect(() => {
-    switch (tic) {
-      case 0:
-        gsap.to(parameters, {
-          state1: 1.0,
-          state2: 1.0,
-          state3: 1.0,
-          duration: 1.25,
-          ease: "circ.out",
-        });
-        break;
-      case 1:
-        gsap.to(parameters, {
-          state3: 0.0,
-          duration: 1.25,
-          ease: "circ.out",
-        });
-        break;
-      case 2:
-        gsap.to(parameters, {
-          state2: 0.0,
-          duration: 1.25,
-          ease: "circ.out",
-        });
-        break;
-      case 3:
-        gsap.to(parameters, {
-          state1: 0.0,
-          duration: 1.25,
-          ease: "circ.out",
-        });
-        break;
-      default:
-        console.error("tic value expected to be between 0 and 3");
-        break;
-    }
-  }, [tic, parameters]);
-
-  useEffect(() => {
-    switch (isInSection) {
-      case navigation[router.locale].main[0].href:
-        gsap.to(parameters, {
-          randomState: 1.0,
-          duration: 3.0,
-          ease: "circ.out",
-        });
-        break;
-      case navigation[router.locale].main[1].href:
-        gsap.to(parameters, {
-          randomState: 0.0,
-          duration: 3.0,
-        });
-        break;
-      case navigation[router.locale].main[2].href:
-        gsap.to(parameters, {
-          randomState: 0.0,
-          duration: 3.0,
-        });
-        break;
-      case navigation[router.locale].main[3].href:
-        gsap.to(parameters, {
-          randomState: 0.0,
-          duration: 3.0,
-        });
-        break;
-      default:
-        console.error("expected navigation value");
-        break;
-    }
-  }, [isInSection, navigation, parameters]); */
 
   return <canvas className="fixed -z-10" ref={ref} />;
 }

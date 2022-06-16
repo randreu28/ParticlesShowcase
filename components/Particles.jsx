@@ -5,8 +5,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import gsap from "gsap";
 import GUI from 'lil-gui';
 
-import bufferVertexShader from "../public/config/vertex.glsl";
-import bufferFragmentShader from "../public/config/fragment.glsl";
+import bufferVertexShader from "../public/three/vertex.glsl";
+import bufferFragmentShader from "../public/three/fragment.glsl";
 
 export default function Particles() {
   const ref = useRef();

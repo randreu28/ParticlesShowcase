@@ -32,7 +32,7 @@ export default function ParticlesFiver({ router }) {
   const ShaderMaterial = shaderMaterial(
     {
       particleSize: parameters.particleSize,
-      bufferColor: new THREE.Color(parameters.bufferColor),
+      bufferColor: new THREE.Color(parameters.bufferColor).convertLinearToSRGB(),
       time: 0,
       transparencyState: parameters.transparencyState,
       randomState: parameters.randomState,
@@ -52,7 +52,7 @@ export default function ParticlesFiver({ router }) {
       parameters.particleSize;
     shaderRef.current.material.uniforms.bufferColor.value = new THREE.Color(
       parameters.bufferColor
-    );
+    ).convertLinearToSRGB();
     shaderRef.current.material.uniforms.time.value = state.clock.elapsedTime;
     shaderRef.current.material.uniforms.transparencyState.value =
       parameters.transparencyState;
@@ -71,7 +71,7 @@ export default function ParticlesFiver({ router }) {
   guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
     shaderRef.current.material.uniforms.bufferColor.value = new THREE.Color(
       parameters.bufferColor
-    );
+    ).convertLinearToSRGB;
   });
 
   guiStates

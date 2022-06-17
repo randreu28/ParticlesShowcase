@@ -19,8 +19,8 @@ export default function ParticlesFiver({ router }) {
     {
       bufferColor: 0xf8665d,
       particleSize: 2,
-      transparencyState: 1.0,
-      randomState: 1.0,
+      transparencyState: 0.0,
+      randomState: 0.0,
       state1: 1.0,
       state2: 1.0,
       state3: 1.0,
@@ -99,6 +99,27 @@ export default function ParticlesFiver({ router }) {
       gui.destroy(); //Destroys gui before route change
       return true;
     });
+
+    //Welcome animation
+    gsap.to(parameters, {
+      randomState: 1.0,
+      duration: 3.0,
+      ease: "circ.out",
+    });
+    gsap.to(parameters, {
+      delay: 1,
+      transparencyState: 1.0,
+      duration: 3.0,
+      ease: "circ.out",
+    });
+    gsap.to(parameters, {
+      state1: 1.0,
+      state2: 1.0,
+      state3: 1.0,
+      duration: 1.25,
+      ease: "circ.out",
+    });
+    
   }, []);
 
   return (

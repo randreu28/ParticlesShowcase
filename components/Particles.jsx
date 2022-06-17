@@ -234,14 +234,14 @@ export default function Particles() {
     .min(0)
     .max(1)
     .step(0.01)
-    .name("State 1")
+    .name("State 2")
 
     guiStates
     .add(parameters, "state3")
     .min(0)
     .max(1)
     .step(0.01)
-    .name("State 2")
+    .name("State 3")
 
 
     // Animate

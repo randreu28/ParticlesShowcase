@@ -2,21 +2,62 @@ import {
   ComputedAttribute,
   OrbitControls,
   PerspectiveCamera,
+  shaderMaterial,
 } from "@react-three/drei";
+import { extend } from "@react-three/fiber";
 import * as THREE from "three";
 import { useState } from "react";
 
-export default function ParticlesFiver() {
+import bufferVertexShader from "../public/three/vertex.glsl";
+import bufferFragmentShader from "../public/three/fragment.glsl";
 
-  const [parameters] = useState({
-    bufferColor: 0xf8665d,
-    particleSize: 0.02,
-    transparencyState: 0.0,
-    randomState: 0.0,
-    state1: 1.0,
-    state2: 1.0,
-    state3: 1.0,
-  },[]);
+export default function ParticlesFiver() {
+  const [parameters] = useState(
+    {
+      bufferColor: 0xf8665d,
+      particleSize: 0.0125,
+      transparencyState: 0.0,
+      randomState: 1.0,
+      state1: 1.0,
+      state2: 1.0,
+      state3: 1.0,
+    },
+    []
+  );
+  extend({
+    // shaderMaterial creates a THREE.ShaderMaterial, and auto-creates uniform setter/getters
+    // extend makes it available in JSX, in this case <portalMaterial />
+    ShaderMaterial: shaderMaterial(
+      {
+        particleSize: {
+          value: parameters.particleSize,
+        },
+        bufferColor: {
+          value: new THREE.Color(parameters.bufferColor),
+        },
+        time: {
+          value: 0,
+        },
+        transparencyState: {
+          value: parameters.transparencyState,
+        },
+        randomState: {
+          value: parameters.randomState,
+        },
+        state1: {
+          value: parameters.state1,
+        },
+        state2: {
+          value: parameters.state2,
+        },
+        state3: {
+          value: parameters.state3,
+        },
+      },
+      bufferVertexShader,
+      bufferFragmentShader
+    ),
+  });
 
   return (
     <>
@@ -88,7 +129,7 @@ export default function ParticlesFiver() {
           />
 
           <ComputedAttribute
-            name="position3"
+            name="position4"
             compute={(geometry) => {
               const geometry4 = new THREE.TorusBufferGeometry(
                 0.65,
@@ -123,7 +164,19 @@ export default function ParticlesFiver() {
             usage={THREE.StaticReadUsage}
           />
         </bufferGeometry>
-        <pointsMaterial color={parameters.bufferColor} size={parameters.particleSize}></pointsMaterial>
+        <shaderMaterial
+          particleSize={parameters.particleSize}
+          bufferColor={new THREE.Color(parameters.bufferColor)}
+          time={0}
+          transparencyState={parameters.transparencyState}
+          randomState={parameters.randomState}
+          state1={parameters.state1}
+          state2={parameters.state2}
+          state3={parameters.state3}
+          //transparent={true}
+          //vertexColors={true}
+        />
+        <pointsMaterial color={parameters.bufferColor} size={parameters.particleSize}/>
       </points>
     </>
   );

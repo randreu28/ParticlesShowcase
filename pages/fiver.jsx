@@ -5,7 +5,7 @@ import ParticlesFiver from '../components/ParticlesFiver'
 export default function Fiver() {
   return (
     <div className='h-screen'>
-        <Canvas>
+        <Canvas className='bg-gray-800'>
             <Suspense fallback={null}>
                 <ParticlesFiver/>
             </Suspense>

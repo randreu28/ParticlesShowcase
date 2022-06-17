@@ -6,7 +6,11 @@ import {
 } from "@react-three/drei";
 import { extend, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/router";
+
+import gsap from "gsap";
+import GUI from 'lil-gui';
 
 import bufferVertexShader from "../public/three/vertex.glsl";
 import bufferFragmentShader from "../public/three/fragment.glsl";
@@ -25,6 +29,7 @@ export default function ParticlesFiver() {
     []
   );
   const shaderRef = useRef();
+  const router = useRouter();
 
   const ShaderMaterial = shaderMaterial(
     {
@@ -45,16 +50,71 @@ export default function ParticlesFiver() {
 
   //Keeps the uniforms updated
   useFrame((state) => {
-    shaderRef.current.material.uniforms.time.value = state.clock.elapsedTime;
-    shaderRef.current.material.uniforms.value = parameters.transparencyState;
-    shaderRef.current.material.uniforms.randomState.value =
-      parameters.randomState;
     shaderRef.current.material.uniforms.particleSize.value =
       parameters.particleSize;
+    shaderRef.current.material.uniforms.bufferColor.value = new THREE.Color(parameters.bufferColor);
+    shaderRef.current.material.uniforms.time.value = state.clock.elapsedTime;
+    shaderRef.current.material.uniforms.transparencyState.value = parameters.transparencyState;
+    shaderRef.current.material.uniforms.randomState.value =
+      parameters.randomState;
     shaderRef.current.material.uniforms.state1.value = parameters.state1;
     shaderRef.current.material.uniforms.state2.value = parameters.state2;
     shaderRef.current.material.uniforms.state3.value = parameters.state3;
   });
+
+  //GUI
+  const gui = new GUI();
+  const guiGeneral = gui.addFolder('General');
+  const guiStates = gui.addFolder('States');
+  
+  /* router.beforePopState(({ }) => {
+    gui.destroy(); //Destroys gui before route change
+    return true;
+  }); */
+
+  guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
+    shaderRef.current.material.uniforms.bufferColor.value = new THREE.Color(parameters.bufferColor);
+  });
+
+  guiStates
+  .add(parameters, "transparencyState")
+  .min(0)
+  .max(1)
+  .step(0.01)
+  .name("Alpha");
+
+  guiStates
+  .add(parameters, "randomState")
+  .min(0)
+  .max(1)
+  .step(0.01)
+  .name("Random state");
+
+  guiStates
+  .add(parameters, "state1")
+  .min(0)
+  .max(1)
+  .step(0.01)
+  .name("State 1");
+
+  guiStates
+  .add(parameters, "state2")
+  .min(0)
+  .max(1)
+  .step(0.01)
+  .name("State 1")
+
+  guiStates
+  .add(parameters, "state3")
+  .min(0)
+  .max(1)
+  .step(0.01)
+  .name("State 2")
+
+  useEffect(() => {
+   //...
+  }, [])
+  
 
   return (
     <>

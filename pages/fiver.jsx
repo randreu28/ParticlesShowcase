@@ -6,8 +6,8 @@ import ParticlesFiver from "../components/ParticlesFiver";
 export default function Fiver() {
   const router = useRouter();
   return (
-    <div className="h-screen">
-      <Canvas className="bg-gray-800">
+    <div className="h-screen w-screen bg-gray-800">
+      <Canvas>
         <Suspense fallback={null}>
           <ParticlesFiver router={router}/>
         </Suspense>

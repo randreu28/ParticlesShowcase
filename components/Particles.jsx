@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import gsap from "gsap";
 import GUI from 'lil-gui';
 
@@ -104,32 +103,6 @@ export default function Particles() {
     geometry.setAttribute("position3", geometry3Attribute);
     geometry.setAttribute("position4", geometry4Attribute);
     geometry.setAttribute("position5", geometry5Attribute);
-
-    /* const gltfLoader = new GLTFLoader();
-
-    gltfLoader.load("/three/models/king.glb", (gltf) => {
-      const geometry3Attribute = new THREE.BufferAttribute(
-        gltf.scene.children[0].geometry.attributes.position.array,
-        3
-      );
-      geometry.setAttribute("position3", geometry3Attribute);
-    });
-
-    gltfLoader.load("/three/models/rocket.glb", (gltf) => {
-      const geometry4Attribute = new THREE.BufferAttribute(
-        gltf.scene.children[0].geometry.attributes.position.array,
-        3
-      );
-      geometry.setAttribute("position4", geometry4Attribute);
-    });
-
-    gltfLoader.load("/three/models/lightbulb.glb", (gltf) => {
-      const geometry5Attribute = new THREE.BufferAttribute(
-        gltf.scene.children[0].geometry.attributes.position.array,
-        3
-      );
-      geometry.setAttribute("position5", geometry5Attribute);
-    }); */
 
     //Custom shaders
     const bufferMaterial = new THREE.ShaderMaterial({

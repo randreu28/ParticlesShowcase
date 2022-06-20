@@ -4,7 +4,7 @@ export default function Layout({ children }) {
   return (
     <div className="flex flex-col h-screen justify-between">
       <header className="py-4 text-white z-10">
-        <div className="justify-between flex w-full px-10 lg:px-[20vh]">
+        <div className="justify-between flex w-full max-w-6xl m-auto px-3">
           <Link href="/">
             <a className="hover:opacity-50 duration-200">Vanilla Three.js</a>
           </Link>

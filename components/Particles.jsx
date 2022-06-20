@@ -104,7 +104,7 @@ export default function Particles() {
           value: parameters.particleSize,
         },
         bufferColor: {
-          value: new THREE.Color(parameters.bufferColor).convertLinearToSRGB(),
+          value: new THREE.Color(parameters.bufferColor),
         },
         time: {
           value: 0,

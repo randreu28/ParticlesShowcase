@@ -125,7 +125,7 @@ export default function ParticlesFiver({ router }) {
   return (
     <>
       <PerspectiveCamera makeDefault position={[2, 1, 1]} />
-      <OrbitControls />
+      <OrbitControls enablePan={false} />
       <points ref={shaderRef}>
         <bufferGeometry>
           <ComputedAttribute

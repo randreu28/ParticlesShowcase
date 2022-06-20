@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as THREE from "three";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import gsap from "gsap";
 import GUI from "lil-gui";
 
@@ -52,18 +53,6 @@ export default function Particles() {
 
     // Scene
     const scene = new THREE.Scene();
-
-    // Cursor
-    const mouse = {
-      x: 0,
-      y: 0,
-    };
-
-    window.addEventListener("mousemove", (event) => {
-      //Value's domain is [-1, 1]
-      mouse.x = (event.clientX / sizes.width) * 2 - 1;
-      mouse.y = (event.clientY / sizes.height) * -2 + 1;
-    });
 
     //Geometries (And some more in case GLTFloader fails)
     const geometry = new THREE.BufferGeometry();
@@ -138,11 +127,7 @@ export default function Particles() {
       },
     });
 
-    //final geometry display and tweaks
     const buffer = new THREE.Points(geometry, bufferMaterial);
-
-    buffer.rotation.x = 0.5;
-    buffer.rotation.y = 0.5;
     scene.add(buffer);
 
     // Camera (responsive)
@@ -215,15 +200,18 @@ export default function Particles() {
     router.events.on("beforeHistoryChange", () => {
       gui.destroy();
     });
-
+    
+    //Controls
+    const controls = new OrbitControls( camera, renderer.domElement );
+    controls.enablePan = false;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.04;
     // Animate
     const clock = new THREE.Clock();
 
     const tick = () => {
       const elapsedTime = clock.getElapsedTime();
-
-      buffer.rotation.x += 0.02 * (-mouse.y * 0.25 - buffer.rotation.x + 0.25);
-      buffer.rotation.y += 0.02 * (mouse.x * 0.25 - buffer.rotation.y + 0.25);
+      controls.update();
 
       //Update material
       bufferMaterial.uniforms.time.value = elapsedTime;

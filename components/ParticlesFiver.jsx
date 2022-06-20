@@ -32,7 +32,9 @@ export default function ParticlesFiver({ router }) {
   const ShaderMaterial = shaderMaterial(
     {
       particleSize: parameters.particleSize,
-      bufferColor: new THREE.Color(parameters.bufferColor).convertLinearToSRGB(),
+      bufferColor: new THREE.Color(
+        parameters.bufferColor
+      ).convertLinearToSRGB(),
       time: 0,
       transparencyState: parameters.transparencyState,
       randomState: parameters.randomState,
@@ -94,12 +96,11 @@ export default function ParticlesFiver({ router }) {
 
   guiStates.add(parameters, "state3").min(0).max(1).step(0.01).name("State 3");
 
-  useEffect(() => {
-    router.beforePopState(() => {
-      gui.destroy(); //Destroys gui before route change
-      return true;
-    });
+  router.events.on("beforeHistoryChange", () => {
+    gui.destroy();
+  });
 
+  useEffect(() => {
     //Welcome animation
     gsap.to(parameters, {
       randomState: 1.0,
@@ -119,7 +120,6 @@ export default function ParticlesFiver({ router }) {
       duration: 1.25,
       ease: "circ.out",
     });
-    
   }, []);
 
   return (

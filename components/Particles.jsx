@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as THREE from "three";
 import gsap from "gsap";
-import GUI from 'lil-gui';
+import GUI from "lil-gui";
 
 import bufferVertexShader from "../public/three/vertex.glsl";
 import bufferFragmentShader from "../public/three/fragment.glsl";
@@ -169,53 +169,52 @@ export default function Particles() {
 
     //GUI
     const gui = new GUI();
-    const guiGeneral = gui.addFolder('General');
-    const guiStates = gui.addFolder('States');
-    
-    router.beforePopState(({ }) => {
-      gui.destroy(); //Destroys gui before route change
-      return true;
-    });
+
+    const guiGeneral = gui.addFolder("General");
+    const guiStates = gui.addFolder("States");
 
     guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
       bufferMaterial.uniforms.bufferColor.value.set(parameters.bufferColor);
     });
 
     guiStates
-    .add(parameters, "transparencyState")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("Alpha");
+      .add(parameters, "transparencyState")
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name("Alpha");
 
     guiStates
-    .add(parameters, "randomState")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("Random state");
+      .add(parameters, "randomState")
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name("Random state");
 
     guiStates
-    .add(parameters, "state1")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("State 1");
+      .add(parameters, "state1")
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name("State 1");
 
     guiStates
-    .add(parameters, "state2")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("State 2")
+      .add(parameters, "state2")
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name("State 2");
 
     guiStates
-    .add(parameters, "state3")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("State 3")
+      .add(parameters, "state3")
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name("State 3");
 
+    router.events.on("beforeHistoryChange", () => {
+      gui.destroy();
+    });
 
     // Animate
     const clock = new THREE.Clock();

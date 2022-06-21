@@ -1,15 +1,18 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
+  const isRouter = useRouter();
+  console.log(isRouter.asPath)
   return (
     <div className="flex flex-col h-screen justify-between">
       <header className="py-4 text-white z-10">
         <div className="justify-between flex w-full max-w-6xl m-auto px-3">
           <Link href="/">
-            <a className="hover:opacity-50 duration-200">Vanilla Three.js</a>
+            <a className={isRouter.asPath == "/" ? "hover:opacity-50 duration-200 text-rose-400" : "hover:opacity-50 duration-200"}>Vanilla Three.js</a>
           </Link>
           <Link href="/fiver">
-            <a className="hover:opacity-50 duration-200">React-Three-Fiver</a>
+            <a className={isRouter.asPath == "/fiver" ? "hover:opacity-50 duration-200 text-rose-400" : "hover:opacity-50 duration-200"}>React-Three-Fiver</a>
           </Link>
         </div>
       </header>

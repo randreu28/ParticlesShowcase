@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as THREE from "three";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import gsap from "gsap";
 import GUI from "lil-gui";
 
@@ -12,10 +12,6 @@ export default function Particles() {
   const ref = useRef();
   const router = useRouter();
 
-  useEffect(() => {
-    document.getElementsByTagName("body")[0].classList.add("bg-gray-800");
-  }, []);
-
   const [parameters] = useState({
     bufferColor: 0xf8665d,
     particleSize: 2,
@@ -24,6 +20,40 @@ export default function Particles() {
     state1: 1.0,
     state2: 1.0,
     state3: 1.0,
+  });
+
+  //GUI
+  const gui = new GUI();
+
+  const guiGeneral = gui.addFolder("General");
+  const guiStates = gui.addFolder("States");
+
+  guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
+    bufferMaterial.uniforms.bufferColor.value.set(parameters.bufferColor);
+  });
+
+  guiStates
+    .add(parameters, "transparencyState")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("Alpha");
+
+  guiStates
+    .add(parameters, "randomState")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("Random state");
+
+  guiStates.add(parameters, "state1").min(0).max(1).step(0.01).name("State 1");
+
+  guiStates.add(parameters, "state2").min(0).max(1).step(0.01).name("State 2");
+
+  guiStates.add(parameters, "state3").min(0).max(1).step(0.01).name("State 3");
+
+  router.events.on("beforeHistoryChange", () => {
+    gui.destroy();
   });
 
   useEffect(() => {
@@ -152,57 +182,8 @@ export default function Particles() {
     renderer.render(scene, camera);
     renderer.setPixelRatio(window.devicePixelRatio);
 
-    //GUI
-    const gui = new GUI();
-
-    const guiGeneral = gui.addFolder("General");
-    const guiStates = gui.addFolder("States");
-
-    guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
-      bufferMaterial.uniforms.bufferColor.value.set(parameters.bufferColor);
-    });
-
-    guiStates
-      .add(parameters, "transparencyState")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("Alpha");
-
-    guiStates
-      .add(parameters, "randomState")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("Random state");
-
-    guiStates
-      .add(parameters, "state1")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("State 1");
-
-    guiStates
-      .add(parameters, "state2")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("State 2");
-
-    guiStates
-      .add(parameters, "state3")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("State 3");
-
-    router.events.on("beforeHistoryChange", () => {
-      gui.destroy();
-    });
-    
     //Controls
-    const controls = new OrbitControls( camera, renderer.domElement );
+    const controls = new OrbitControls(camera, renderer.domElement);
     controls.enablePan = false;
     controls.enableDamping = true;
     controls.dampingFactor = 0.04;
@@ -253,5 +234,5 @@ export default function Particles() {
     });
   }, [parameters]);
 
-  return <canvas className="fixed -z-10" ref={ref} />;
+  return <canvas className="fixed -z-10 bg-gray-800" ref={ref} />;
 }

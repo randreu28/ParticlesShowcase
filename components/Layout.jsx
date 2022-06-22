@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
   const isRouter = useRouter();
-  console.log(isRouter.asPath)
   return (
     <div className="flex flex-col h-screen justify-between">
       <header className="py-4 text-white z-10">

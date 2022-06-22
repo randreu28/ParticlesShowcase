@@ -22,39 +22,39 @@ export default function Particles() {
     state3: 1.0,
   });
 
-  //GUI
-  const gui = new GUI();
+ useEffect(()=>{
+   //GUI
+   const gui = new GUI();
 
-  const guiGeneral = gui.addFolder("General");
-  const guiStates = gui.addFolder("States");
-
-  guiGeneral.addColor(parameters, "bufferColor").onChange(() => {
-    bufferMaterial.uniforms.bufferColor.value.set(parameters.bufferColor);
-  });
-
-  guiStates
-    .add(parameters, "transparencyState")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("Alpha");
-
-  guiStates
-    .add(parameters, "randomState")
-    .min(0)
-    .max(1)
-    .step(0.01)
-    .name("Random state");
-
-  guiStates.add(parameters, "state1").min(0).max(1).step(0.01).name("State 1");
-
-  guiStates.add(parameters, "state2").min(0).max(1).step(0.01).name("State 2");
-
-  guiStates.add(parameters, "state3").min(0).max(1).step(0.01).name("State 3");
-
-  router.events.on("beforeHistoryChange", () => {
-    gui.destroy();
-  });
+   const guiGeneral = gui.addFolder("General");
+   guiGeneral.addColor(parameters, "bufferColor");
+   
+   const guiStates = gui.addFolder("States");
+   
+   guiStates
+     .add(parameters, "transparencyState")
+     .min(0)
+     .max(1)
+     .step(0.01)
+     .name("Alpha");
+ 
+   guiStates
+     .add(parameters, "randomState")
+     .min(0)
+     .max(1)
+     .step(0.01)
+     .name("Random state");
+ 
+   guiStates.add(parameters, "state1").min(0).max(1).step(0.01).name("State 1");
+ 
+   guiStates.add(parameters, "state2").min(0).max(1).step(0.01).name("State 2");
+ 
+   guiStates.add(parameters, "state3").min(0).max(1).step(0.01).name("State 3");
+ 
+   router.events.on("beforeHistoryChange", () => {
+     gui.destroy();
+   });
+ },[router.beforePopState])
 
   useEffect(() => {
     const canvas = ref.current;
@@ -196,6 +196,7 @@ export default function Particles() {
 
       //Update material
       bufferMaterial.uniforms.time.value = elapsedTime;
+      bufferMaterial.uniforms.bufferColor.value = new THREE.Color(parameters.bufferColor);
       bufferMaterial.uniforms.transparencyState.value =
         parameters.transparencyState;
       bufferMaterial.uniforms.randomState.value = parameters.randomState;
